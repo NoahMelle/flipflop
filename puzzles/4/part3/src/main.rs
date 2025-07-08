@@ -13,10 +13,9 @@ fn main() {
         let steps_y = (new_pos.1 as i32 - pos.1 as i32).abs() as u32;
 
         let diagonal_steps = cmp::min(steps_x, steps_y);
-        let straight_steps_x = steps_x - diagonal_steps;
-        let straight_steps_y = steps_y - diagonal_steps;
+        let straight_steps = cmp::max(steps_x, steps_y) - diagonal_steps;
 
-        steps += diagonal_steps + straight_steps_x + straight_steps_y;
+        steps += diagonal_steps + straight_steps;
         pos = new_pos;
     }
 
