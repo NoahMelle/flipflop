@@ -27,7 +27,7 @@ fn main() {
 }
 
 fn get_color(line: &str) -> Color {
-    let colors: Vec<&str> = line.split(",").collect();
+    let colors: Vec<u32> = line.split(",").map(|c| c.parse::<u32>().unwrap()).collect();
     let mut max_value: Option<(Color, u32)> = None;
 
     if contains_duplicates(&colors) {
@@ -35,10 +35,8 @@ fn get_color(line: &str) -> Color {
     }
 
     for (index, color) in colors.iter().enumerate() {
-        let value = color.parse::<u32>().unwrap();
-
         if let Some((ref _max_color, max_val)) = max_value {
-            if value > max_val {
+            if *color > max_val {
                 let color_variant = match index {
                     0 => Color::Red,
                     1 => Color::Green,
@@ -46,7 +44,7 @@ fn get_color(line: &str) -> Color {
                     _ => continue,
                 };
 
-                max_value = Some((color_variant, value));
+                max_value = Some((color_variant, *color));
             }
         } else {
             let color_variant = match index {
@@ -56,7 +54,7 @@ fn get_color(line: &str) -> Color {
                 _ => continue,
             };
 
-            max_value = Some((color_variant, value));
+            max_value = Some((color_variant, *color));
         }
     }
 
@@ -69,11 +67,10 @@ fn parse_input(filename: &str) -> Vec<String> {
     data.lines().map(|line| line.to_string()).collect()
 }
 
-fn contains_duplicates(v: &Vec<&str>) -> bool {
+fn contains_duplicates(v: &Vec<u32>) -> bool {
     let mut value_counts: HashMap<u32, u32> = HashMap::new();
     for color in v.clone() {
-        let value = color.parse::<u32>().unwrap();
-        *value_counts.entry(value).or_insert(0) += 1;
+        *value_counts.entry(color).or_insert(0) += 1;
     }
     value_counts.values().any(|&count| count >= 2)
 }
